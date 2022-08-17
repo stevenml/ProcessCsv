@@ -4,8 +4,8 @@ using CsvHelper.Configuration.Attributes;
 
 public class ModFileModel
 {
-    public DateTime Date { get; set; }
+    public string Date { get; set; }
 
     [Name("MOD Duration")]
-    public decimal ModDuration { get; set; }
+    public double ModDuration { get; set; }
 }

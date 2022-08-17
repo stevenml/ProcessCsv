@@ -4,8 +4,8 @@ using CsvHelper.Configuration.Attributes;
 
 public class CommFileModel
 {
-    public DateTime Date { get; set; }
+    public string Date { get; set; }
 
     [Name("Price SOD")]
-    public decimal PriceSod { get; set; }
+    public double PriceSod { get; set; }
 }
