@@ -11,6 +11,7 @@ appBuilder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 appBuilder.Host.ConfigureContainer<ContainerBuilder>(cb =>
 {
+    // Register Commands
     cb.RegisterType<PrintAbnormalValuesCommand>()
         .WithAttributeFiltering();
 });

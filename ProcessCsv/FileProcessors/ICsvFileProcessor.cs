@@ -2,5 +2,5 @@
 
 public interface ICsvFileProcessor
 {
-    void ProcessFile(string filePath);
+    Task ProcessFile(string filePath);
 }

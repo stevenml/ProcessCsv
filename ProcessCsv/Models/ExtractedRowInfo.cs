@@ -2,6 +2,6 @@
 
 public class ExtractedRowInfo
 {
-    public string Date { get; set; }
+    public string Date { get; set; } = null!;
     public double Value { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿namespace ProcessCsv.FileProcessors;
 
+using Extensions;
 using Helpers;
 using Models;
 using MathNet.Numerics.Statistics;
@@ -9,25 +10,23 @@ public class PrintAbnormalValues: CsvFileProcessor
     private readonly int _normalRangePercentage;
     public PrintAbnormalValues(int normalRangePercentage)
     {
-        this._normalRangePercentage = normalRangePercentage;
+        _normalRangePercentage = normalRangePercentage;
     }
     
-    public override void ProcessFile(string filePath)
+    public override Task ProcessFile(string filePath)
     {
         var fileName = Path.GetFileName(filePath);
         var extractedRows = ReadCsvByFileName(filePath, fileName);
         double medianValue = extractedRows.Select(x => x.Value).Median();
-        double upperRange = medianValue * (100 + _normalRangePercentage) / 100;
-        double lowerRange = medianValue * (100 - _normalRangePercentage) / 100;
+
+        var abnormalRows = extractedRows.FindAbnormalRows(medianValue, _normalRangePercentage);
         
-        foreach (var row in extractedRows)
+        foreach (var row in abnormalRows)
         {
-            if (row.Value > upperRange || row.Value < lowerRange)
-            {
-                var date = row.Date;
-                Console.WriteLine($"{fileName} {date} {row.Value} {medianValue}");
-            }
+            Console.WriteLine($"{fileName} {row.Date} {row.Value} {medianValue}");
         }
+        
+        return Task.CompletedTask;
     }
 
     private static IReadOnlyCollection<ExtractedRowInfo> ReadCsvByFileName(string filePath, string fileName)

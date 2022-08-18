@@ -14,5 +14,5 @@ public static class DirectoryProcessHelper
                 continue;
             getCsvProcessor().ProcessFile(fileName);
         }
-    } 
+    }
 }
