@@ -3,5 +3,6 @@
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::A488591C-6E7B-4F16-BD7E-AA68CD874941::net6.0::ProcessCsvTests.MathNetTest.TestMedian&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::A488591C-6E7B-4F16-BD7E-AA68CD874941::net6.0::ProcessCsvTests.AlgorithmTests.TestFindAbnormalRows&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::A488591C-6E7B-4F16-BD7E-AA68CD874941::net6.0::ProcessCsvTests.FileProcessorsTests.PrintAbnormalValuesProcessorTests.TestFindAbnormalRows&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

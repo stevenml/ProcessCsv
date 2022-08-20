@@ -16,6 +16,7 @@ appBuilder.Host.ConfigureContainer<ContainerBuilder>(cb =>
     // Service register
     cb.RegisterGeneric(typeof(CsvReaderService<>)).As(typeof(ICsvReaderService<>)).SingleInstance();
     cb.RegisterType<PrintAbnormalValuesProcessor>().InstancePerDependency();
+    cb.RegisterType<PrintToConsoleService>().As<IPrintService>().SingleInstance();
     
     // Register Commands
     cb.RegisterType<PrintAbnormalValuesCommand>()

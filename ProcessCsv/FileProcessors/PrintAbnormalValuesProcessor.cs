@@ -10,14 +10,17 @@ public class PrintAbnormalValuesProcessor: CsvFileProcessor
     private readonly int _normalRangePercentage;
     private readonly ICsvReaderService<CommFileModel> _commFileReaderService;
     private readonly ICsvReaderService<ModFileModel> _modFileReaderService;
+    private readonly IPrintService _printService;
     
     public PrintAbnormalValuesProcessor(int normalRangePercentage, 
         ICsvReaderService<CommFileModel> commFileReaderService,
-        ICsvReaderService<ModFileModel> modFileReaderService)
+        ICsvReaderService<ModFileModel> modFileReaderService,
+        IPrintService printService)
     {
         _normalRangePercentage = normalRangePercentage;
         _commFileReaderService = commFileReaderService;
         _modFileReaderService = modFileReaderService;
+        _printService = printService;
     }
     
     public override async Task ProcessFile(string filePath)
@@ -30,7 +33,7 @@ public class PrintAbnormalValuesProcessor: CsvFileProcessor
         
         foreach (var row in abnormalRows)
         {
-            Console.WriteLine($"{fileName} {row.Date} {row.Value} {medianValue}");
+            _printService.PrintLine($"{fileName} {row.Date} {row.Value} {medianValue}");
         }
         
         await Task.CompletedTask;
