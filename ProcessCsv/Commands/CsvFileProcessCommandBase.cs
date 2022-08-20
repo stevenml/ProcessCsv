@@ -1,15 +1,20 @@
 ﻿namespace ProcessCsv.Commands;
 
+using Autofac;
 using FileProcessors;
-using Helpers;
 using Utils;
 
 public abstract class CsvFileProcessCommandBase
 {
+    protected readonly IComponentContext IcoContext;
+    
+    protected CsvFileProcessCommandBase(IComponentContext icoContext)
+    {
+        IcoContext = icoContext;
+    }
+
     protected async Task ProcessFolderOrFileSequential(string directoryPath, string filePath)
     {
-        var processor = GetCsvProcessor();
-        
         if (!string.IsNullOrWhiteSpace(directoryPath) && !string.IsNullOrWhiteSpace(filePath))
         {
             Console.WriteLine("You can only specify directory or file path");
@@ -25,12 +30,12 @@ public abstract class CsvFileProcessCommandBase
             string [] fileEntries = Directory.GetFiles(directoryPath);
             foreach (var file in fileEntries)
             {
-                await processor.ProcessFile(file);
+                await CsvProcessor.ProcessFile(file);
             }
         }
         else if (File.Exists(filePath))
         {
-            await processor.ProcessFile(filePath);
+            await CsvProcessor.ProcessFile(filePath);
         }
         else
         {
@@ -40,8 +45,6 @@ public abstract class CsvFileProcessCommandBase
     
     protected async Task ProcessFolderOrFileInParallel(string directoryPath, string filePath)
     {
-        var processor = GetCsvProcessor();
-        
         if (!string.IsNullOrWhiteSpace(directoryPath) && !string.IsNullOrWhiteSpace(filePath))
         {
             Console.WriteLine("You can only specify directory or file path");
@@ -67,7 +70,7 @@ public abstract class CsvFileProcessCommandBase
         }
         else if (File.Exists(filePath))
         {
-            await processor.ProcessFile(filePath);
+            await CsvProcessor.ProcessFile(filePath);
         }
         else
         {
@@ -75,11 +78,12 @@ public abstract class CsvFileProcessCommandBase
         }
     }
 
-    protected abstract ICsvFileProcessor GetCsvProcessor();
-    private Func<IEnumerable<string>, object?, Task> BatchProcessor => (IEnumerable<string> filePaths, object context) =>
+    protected abstract ICsvFileProcessor CsvProcessor { get; }
+
+    private Func<IEnumerable<string>, object?, Task> BatchProcessor => (filePaths, _) =>
     {
         // only support 1 per batch as example
         var fileName = filePaths.First();
-        return GetCsvProcessor().ProcessFile(fileName);
+        return CsvProcessor.ProcessFile(fileName);
     };
 }

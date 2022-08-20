@@ -15,9 +15,5 @@
         <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
         <PackageReference Include="AsyncEnumerator" Version="4.0.2" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Services" />
-    </ItemGroup>
 
 </Project>

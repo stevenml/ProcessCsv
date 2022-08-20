@@ -1,5 +1,6 @@
 ﻿namespace ProcessCsv.Commands;
 
+using Autofac;
 using Cocona;
 using FileProcessors;
 using Helpers;
@@ -7,6 +8,11 @@ using Helpers;
 public class PrintAbnormalValuesCommand: CsvFileProcessCommandBase
 {
     private int _normalRangePercentage;
+    
+    public PrintAbnormalValuesCommand(IComponentContext icoContext) :
+        base(icoContext)
+    {
+    }
 
     [Command("print-abnormal-values", Description = "Print abnormal values n% above or below the median")]
     public async Task PrintAbnormalValues(
@@ -33,9 +39,7 @@ public class PrintAbnormalValuesCommand: CsvFileProcessCommandBase
             await ProcessFolderOrFileSequential(directoryPath, filePath);    
         }
     }
-    
-    protected override ICsvFileProcessor GetCsvProcessor()
-    {
-        return new PrintAbnormalValues(_normalRangePercentage);
-    }
+
+    protected override ICsvFileProcessor CsvProcessor => IcoContext.Resolve<PrintAbnormalValuesProcessor>(
+        new NamedParameter("normalRangePercentage", _normalRangePercentage));
 }

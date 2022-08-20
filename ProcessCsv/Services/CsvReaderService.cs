@@ -1,12 +1,12 @@
-﻿namespace ProcessCsv.Helpers;
+﻿namespace ProcessCsv.Services;
 
 using System.Globalization;
 using CsvHelper;
 using Dasync.Collections;
 
-public static class CsvReadHelper
+public class CsvReaderService<T> : ICsvReaderService<T> where T: class 
 {
-    public static async Task<IReadOnlyCollection<T>> ReadCsvFileAsync<T>(string filePath) where T: class
+    public async Task<IReadOnlyCollection<T>> ReadCsvFileAsync(string filePath)
     {
         try
         {

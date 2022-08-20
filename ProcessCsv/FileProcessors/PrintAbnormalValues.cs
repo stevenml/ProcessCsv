@@ -1,16 +1,23 @@
 ﻿namespace ProcessCsv.FileProcessors;
 
 using Extensions;
-using Helpers;
 using Models;
 using MathNet.Numerics.Statistics;
+using Services;
 
-public class PrintAbnormalValues: CsvFileProcessor
+public class PrintAbnormalValuesProcessor: CsvFileProcessor
 {
     private readonly int _normalRangePercentage;
-    public PrintAbnormalValues(int normalRangePercentage)
+    private readonly ICsvReaderService<CommFileModel> _commFileReaderService;
+    private readonly ICsvReaderService<ModFileModel> _modFileReaderService;
+    
+    public PrintAbnormalValuesProcessor(int normalRangePercentage, 
+        ICsvReaderService<CommFileModel> commFileReaderService,
+        ICsvReaderService<ModFileModel> modFileReaderService)
     {
         _normalRangePercentage = normalRangePercentage;
+        _commFileReaderService = commFileReaderService;
+        _modFileReaderService = modFileReaderService;
     }
     
     public override async Task ProcessFile(string filePath)
@@ -29,11 +36,11 @@ public class PrintAbnormalValues: CsvFileProcessor
         await Task.CompletedTask;
     }
 
-    private static async Task<IReadOnlyCollection<ExtractedRowInfo>> ReadCsvByFileName(string filePath, string fileName)
+    private async Task<IReadOnlyCollection<ExtractedRowInfo>> ReadCsvByFileName(string filePath, string fileName)
     {
         if (fileName.StartsWith("comm_"))
         {
-            return (await CsvReadHelper.ReadCsvFileAsync<CommFileModel>(filePath)).Select(x => new ExtractedRowInfo
+            return (await _commFileReaderService.ReadCsvFileAsync(filePath)).Select(x => new ExtractedRowInfo
             {
                 Date = x.Date,
                 Value = x.PriceSod
@@ -41,7 +48,7 @@ public class PrintAbnormalValues: CsvFileProcessor
         }
         if (fileName.StartsWith("mod_"))
         {
-            return (await CsvReadHelper.ReadCsvFileAsync<ModFileModel>(filePath)).Select(x => new ExtractedRowInfo
+            return (await _modFileReaderService.ReadCsvFileAsync(filePath)).Select(x => new ExtractedRowInfo
             {
                 Date = x.Date,
                 Value = x.ModDuration
