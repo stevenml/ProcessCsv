@@ -9,7 +9,7 @@ public static class ExtractedRowsExtensions
     {
         double upperRange = medianValue * (100 + normalRangePercentage) / 100;
         double lowerRange = medianValue * (100 - normalRangePercentage) / 100;
-
+        
         var abnormalRows = new List<ExtractedRowInfo>();
         foreach (var row in extractedRows)
         {

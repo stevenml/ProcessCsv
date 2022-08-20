@@ -13,12 +13,12 @@ public class PrintAbnormalValues: CsvFileProcessor
         _normalRangePercentage = normalRangePercentage;
     }
     
-    public override Task ProcessFile(string filePath)
+    public override async Task ProcessFile(string filePath)
     {
         var fileName = Path.GetFileName(filePath);
-        var extractedRows = ReadCsvByFileName(filePath, fileName);
+        var extractedRows = await ReadCsvByFileName(filePath, fileName);
         double medianValue = extractedRows.Select(x => x.Value).Median();
-
+        
         var abnormalRows = extractedRows.FindAbnormalRows(medianValue, _normalRangePercentage);
         
         foreach (var row in abnormalRows)
@@ -26,14 +26,14 @@ public class PrintAbnormalValues: CsvFileProcessor
             Console.WriteLine($"{fileName} {row.Date} {row.Value} {medianValue}");
         }
         
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 
-    private static IReadOnlyCollection<ExtractedRowInfo> ReadCsvByFileName(string filePath, string fileName)
+    private static async Task<IReadOnlyCollection<ExtractedRowInfo>> ReadCsvByFileName(string filePath, string fileName)
     {
         if (fileName.StartsWith("comm_"))
         {
-            return CsvReadHelper.ReadCsvFile<CommFileModel>(filePath).Select(x => new ExtractedRowInfo
+            return (await CsvReadHelper.ReadCsvFileAsync<CommFileModel>(filePath)).Select(x => new ExtractedRowInfo
             {
                 Date = x.Date,
                 Value = x.PriceSod
@@ -41,7 +41,7 @@ public class PrintAbnormalValues: CsvFileProcessor
         }
         if (fileName.StartsWith("mod_"))
         {
-            return CsvReadHelper.ReadCsvFile<ModFileModel>(filePath).Select(x => new ExtractedRowInfo
+            return (await CsvReadHelper.ReadCsvFileAsync<ModFileModel>(filePath)).Select(x => new ExtractedRowInfo
             {
                 Date = x.Date,
                 Value = x.ModDuration
